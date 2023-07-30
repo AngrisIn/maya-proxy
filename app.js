@@ -35,11 +35,17 @@ app.get("/files/:fileId", async(req, res) => {
 
 app.post("/generate", async(req, res) => {
 	let { story, title } = req.body
-	const response = await fetch(`${FLASK_SERVER_URL}/generate`, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ story, title })
-	})
-	const data = await response.json()
-	res.status(200).send(data)		
+	try {
+		const response = await fetch(`${FLASK_SERVER_URL}/generate`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ story, title })
+		})
+		console.log(response)
+		const data = await response.json()
+		res.status(200).send(data)
+	} catch (error) {
+		console.log(error)
+		res.status(500).send({ error: "Something went wrong" })
+	}
 })
