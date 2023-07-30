@@ -33,6 +33,20 @@ app.get("/files/:fileId", async(req, res) => {
 	res.status(200).send(data)
 })
 
+app.get("/ip/files/:fileId", async(req, res) => {
+	const { fileId } = req.params
+	const response = await fetch(`${FLASK_SERVER_URL}/ip/files/${fileId}`)
+	
+	// the response could be a video file or a png file, get that and send that as it is to the client
+	const data = await response.buffer()
+
+	// set the content type of the response to the type of the file
+	res.set("Content-Type", response.headers.get("content-type"))
+
+	// send the file to the client
+	res.status(200).send(data)
+})
+
 app.post("/generate", async(req, res) => {
 	let { story, title } = req.body
 	try {
